@@ -124,11 +124,9 @@ Deposit and Withdraw update the balance directly in the vector, then immediately
 
 ---
 
-## 🗺️ Interactive Code Map
+🗺️ Interactive Code Map
 
-👉 **[Open Interactive Code Map](https://ahmedtamerahmed692-maker.github.io/teast-progect-bank/index.html)**
-
-Click the link above to explore all functions and their relationships visually in your browser — no download needed!
+👉 [Open Interactive Code Map](https://ahmedtamerahmed692-maker.github.io/teast-progect-bank/index.html)
 
 ---
 
