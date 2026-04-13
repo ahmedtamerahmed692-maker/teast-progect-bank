@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank Management System — Code Map</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+header { background: #1a1f2e; border-bottom: 1px solid #2d3748; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+header h1 { font-size: 18px; font-weight: 600; color: #f7fafc; }
+header span { font-size: 12px; color: #718096; background: #2d3748; padding: 3px 10px; border-radius: 99px; }
+.layout { display: flex; height: calc(100vh - 57px); }
+.left { width: 290px; flex-shrink: 0; overflow-y: auto; padding: 16px 12px; border-right: 1px solid #2d3748; background: #12161f; }
+.right { flex: 1; overflow-y: auto; padding: 20px; background: #0f1117; }
+.sec-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 4px 10px; border-radius: 99px; margin: 12px 0 6px; display: inline-block; text-transform: uppercase; }
+.fn-btn { width: 100%; text-align: left; padding: 8px 12px; border-radius: 8px; border: 1px solid; cursor: pointer; font-size: 11px; font-family: 'Courier New', monospace; margin-bottom: 4px; transition: all .15s; background: transparent; }
+.fn-btn:hover { filter: brightness(1.3); }
+.shared-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #63b3ed; margin-right: 4px; vertical-align: middle; }
+.purple { border-color: #7c3aed; color: #a78bfa; } .purple.active { background: #1e1040; }
+.teal { border-color: #0d9488; color: #5eead4; } .teal.active { background: #0d2926; }
+.blue { border-color: #2563eb; color: #60a5fa; } .blue.active { background: #0d1f3c; }
+.red { border-color: #dc2626; color: #f87171; } .red.active { background: #2d0f0f; }
+.amber { border-color: #d97706; color: #fbbf24; } .amber.active { background: #2d1f05; }
+.gray { border-color: #4b5563; color: #9ca3af; } .gray.active { background: #1f2533; }
+.green { border-color: #16a34a; color: #4ade80; } .green.active { background: #0d2918; }
+.flow { display: flex; flex-direction: column; gap: 0; margin-bottom: 4px; }
+.flow-arrow { text-align: center; font-size: 11px; color: #4b5563; line-height: 1.4; padding: 1px 0; }
+.row2 { display: flex; gap: 4px; margin-bottom: 4px; }
+.row2 .fn-btn { font-size: 10px; }
+.detail-empty { text-align: center; color: #4b5563; margin-top: 80px; font-size: 14px; }
+.d-title { font-size: 16px; font-weight: 700; font-family: 'Courier New', monospace; color: #f7fafc; margin-bottom: 6px; }
+.d-sub { font-size: 13px; color: #718096; margin-bottom: 12px; }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.badge { font-size: 11px; padding: 2px 10px; border-radius: 99px; font-weight: 600; }
+.b-in { background: #0d2926; color: #5eead4; border: 1px solid #0d9488; }
+.b-out { background: #2d1f05; color: #fbbf24; border: 1px solid #d97706; }
+.b-void { background: #1f2533; color: #9ca3af; border: 1px solid #4b5563; }
+.b-shared { background: #0d1f3c; color: #60a5fa; border: 1px solid #2563eb; }
+.b-new { background: #0d2918; color: #4ade80; border: 1px solid #16a34a; }
+.goes { font-size: 12px; color: #718096; background: #1a1f2e; border: 1px solid #2d3748; border-radius: 8px; padding: 8px 12px; margin-bottom: 14px; }
+.goes span { color: #60a5fa; font-family: 'Courier New', monospace; }
+.vars-title { font-size: 11px; color: #718096; font-weight: 600; margin-bottom: 6px; }
+.var-card { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 8px; padding: 8px 12px; margin-bottom: 6px; }
+.var-name { font-family: 'Courier New', monospace; font-size: 12px; color: #f7fafc; }
+.var-type { color: #718096; font-weight: 400; }
+.var-note { font-size: 11px; color: #718096; margin-top: 3px; }
+.var-warn { font-size: 11px; color: #f59e0b; margin-top: 3px; }
+pre { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 8px; padding: 14px; font-size: 11px; font-family: 'Courier New', monospace; line-height: 1.8; overflow-x: auto; color: #e2e8f0; white-space: pre-wrap; margin-top: 2px; }
+.kw { color: #c084fc; } .cm { color: #4b5563; font-style: italic; } .str { color: #34d399; } .ret { color: #fb923c; font-weight: 700; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; font-size: 11px; }
+.leg { display: flex; align-items: center; gap: 4px; color: #718096; }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0f1117; } ::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 3px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🏦 Bank Management System</h1>
+  <span>Interactive Code Map</span>
+  <span style="margin-left: auto;">Click any function to see its code & details</span>
+</header>
+<div class="layout">
+<div class="left">
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#7c3aed"></div>Add</div>
+    <div class="leg"><div class="leg-dot" style="background:#0d9488"></div>Show</div>
+    <div class="leg"><div class="leg-dot" style="background:#2563eb"></div>Search/Shared</div>
+    <div class="leg"><div class="leg-dot" style="background:#dc2626"></div>Delete</div>
+    <div class="leg"><div class="leg-dot" style="background:#d97706"></div>Update</div>
+    <div class="leg"><div class="leg-dot" style="background:#16a34a"></div>Transactions</div>
+    <div class="leg"><span class="shared-dot"></span>Shared</div>
+  </div>
+
+  <span class="sec-label" style="background:#1e1040;color:#a78bfa;">[1] Add Client</span>
+  <div class="flow">
+    <button class="fn-btn purple" onclick="show('addnewclient',this)">addnewclient()</button>
+    <div class="flow-arrow">↓</div>
+    <button class="fn-btn purple" onclick="show('MadeOpearteAdd',this)">MadeOpearteAdd()</button>
+    <div class="flow-arrow">↓ &nbsp;&nbsp;&nbsp;&nbsp; ↓</div>
+    <div class="row2">
+      <button class="fn-btn purple" onclick="show('read_out',this)">read_out()</button>
+      <button class="fn-btn purple" onclick="show('addDataLineToFile',this)">addDataLine()</button>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <button class="fn-btn gray" onclick="show('file',this)">DataBaseBank</button>
+  </div>
+
+  <span class="sec-label" style="background:#0d2926;color:#5eead4;">[2] Show Clients</span>
+  <div class="flow">
+    <button class="fn-btn teal" onclick="show('ShowClient',this)">ShowClient()</button>
+    <div class="flow-arrow">↓</div>
+    <button class="fn-btn teal" onclick="show('vload',this)">vloaddatainfile()</button>
+    <div class="flow-arrow">↓ calls</div>
+    <div class="row2">
+      <button class="fn-btn teal" onclick="show('vsplit',this)">vsplitstring()</button>
+      <button class="fn-btn teal" onclick="show('convertLine',this)">convertLine()</button>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <button class="fn-btn teal" onclick="show('printDesign',this)">printDesinData()</button>
+  </div>
+
+  <span class="sec-label" style="background:#0d1f3c;color:#60a5fa;">[3] Search</span>
+  <div class="flow">
+    <button class="fn-btn blue" onclick="show('search',this)">search()</button>
+    <div class="flow-arrow">↓</div>
+    <button class="fn-btn blue" onclick="show('check',this)">check_acountnumber() <span class="shared-dot"></span></button>
+    <div class="flow-arrow">true ↓ &nbsp;&nbsp;&nbsp; false ↓</div>
+    <div class="row2">
+      <button class="fn-btn blue" onclick="show('PrintClientCard',this)">PrintClientCard()</button>
+      <button class="fn-btn gray" style="pointer-events:none;opacity:.5;">Not Found</button>
+    </div>
+  </div>
+
+  <span class="sec-label" style="background:#2d0f0f;color:#f87171;">[4] Delete</span>
+  <div class="flow">
+    <button class="fn-btn red" onclick="show('delet',this)">delet()</button>
+    <div class="flow-arrow">↓ shared</div>
+    <button class="fn-btn blue" onclick="show('check',this)">check_acountnumber() <span class="shared-dot"></span></button>
+    <div class="flow-arrow">↓ if Y</div>
+    <div class="row2">
+      <button class="fn-btn red" onclick="show('markdelet',this)">markdelet()</button>
+      <button class="fn-btn red" onclick="show('save',this)">SaveAgain()</button>
+    </div>
+  </div>
+
+  <span class="sec-label" style="background:#2d1f05;color:#fbbf24;">[5] Update</span>
+  <div class="flow">
+    <button class="fn-btn amber" onclick="show('updata',this)">updata_data()</button>
+    <div class="flow-arrow">↓ shared</div>
+    <button class="fn-btn blue" onclick="show('check',this)">check_acountnumber() <span class="shared-dot"></span></button>
+    <div class="flow-arrow">↓ if Y</div>
+    <div class="row2">
+      <button class="fn-btn amber" onclick="show('ChangeRecord',this)">ChangeRecord()</button>
+      <button class="fn-btn red" onclick="show('save',this)">SaveAgain()</button>
+    </div>
+  </div>
+
+  <span class="sec-label" style="background:#0d2918;color:#4ade80;">[6] Transactions</span>
+  <div class="flow">
+    <button class="fn-btn green" onclick="show('TransactionsMenu',this)">TransactionsMenu()</button>
+    <div class="flow-arrow">↓ sub-menu</div>
+    <button class="fn-btn green" onclick="show('depost',this)">depost()</button>
+    <div class="flow-arrow">↓</div>
+    <button class="fn-btn green" onclick="show('withdraw',this)">withdraw()</button>
+    <div class="flow-arrow">↓</div>
+    <button class="fn-btn green" onclick="show('totalbal',this)">ShowTotalBalances()</button>
+    <div class="flow-arrow">↓</div>
+    <button class="fn-btn green" onclick="show('calcTotal',this)">calcTotalBalances()</button>
+  </div>
+
+</div>
+<div class="right" id="panel">
+  <div class="detail-empty">
+    <div style="font-size:48px;margin-bottom:12px;">👉</div>
+    Click any function on the left to see its code and details
+  </div>
+</div>
+</div>
+
+<script>
+var fns = {
+addnewclient:{t:'addnewclient()',s:'Entry point — loop that keeps adding clients',tags:'<span class="badge b-void">void</span>',
+vars:[{n:'check',tp:'char',note:'y or n — determines whether the loop continues',warn:''}],
+goes:'Calls <span>MadeOpearteAdd()</span> on each iteration',
+code:`<span class="kw">void</span> addnewclient() {
+  <span class="kw">char</span> check = <span class="str">'y'</span>;
+  <span class="kw">do</span> {
+    system(<span class="str">"cls"</span>);
+    cout << <span class="str">"Adding New Client:\n\n"</span>;
+    MadeOpearteAdd();
+    cout << <span class="str">"\nAdded! Add more? Y/N? "</span>;
+    cin >> check;
+  } <span class="kw">while</span> (check==<span class="str">'y'</span>||check==<span class="str">'Y'</span>);
+}`},
+MadeOpearteAdd:{t:'MadeOpearteAdd()',s:'Combines reading data and saving to file',tags:'<span class="badge b-void">void</span>',
+vars:[{n:'client',tp:'sclient',note:'Local copy — comes from read_out() and gets converted to a line',warn:'Same name in every function, but each is an INDEPENDENT copy!'}],
+goes:'Calls <span>read_out()</span> then <span>convertDataToLine()</span> then <span>addDataLineToFile()</span>',
+code:`<span class="kw">void</span> MadeOpearteAdd() {
+  sclient client = read_out();
+  addDataLineToFile(
+    filename,
+    convertDataToLine(client)
+  );
+}`},
+read_out:{t:'read_out()',s:'Reads client data from user & checks account number is unique',tags:'<span class="badge b-out">return: sclient</span>',
+vars:[{n:'client',tp:'sclient',note:'struct filled from user input',warn:''},{n:'vclient',tp:'vector<sclient>',note:'Loaded from file to validate no duplicate account numbers',warn:''},{n:'temp',tp:'sclient',note:"Temporary — check_acountnumber requires sclient& but we don't need it here",warn:''}],
+goes:'The sclient returns to <span>MadeOpearteAdd()</span>',
+code:`sclient read_out() {
+  sclient client;
+  vector&lt;sclient&gt; vclient = vloaddatainfile(filename);
+  sclient temp;
+  cin.ignore();
+  cout << <span class="str">"Enter account number? "</span>;
+  getline(cin, client.acount_number);
+  <span class="kw">while</span>(check_acountnumberistrue(
+        client.acount_number, vclient, temp)) {
+    cout << <span class="str">"\nExists! Enter another: "</span>;
+    getline(cin, client.acount_number);
+  }
+  cout << <span class="str">"Enter PinCode? "</span>;
+  getline(cin, client.pincode);
+  cout << <span class="str">"Enter Name? "</span>;
+  getline(cin, client.name);
+  cout << <span class="str">"Enter Phone? "</span>;
+  getline(cin, client.phone);
+  cout << <span class="str">"Enter Account Balance? "</span>;
+  cin >> client.acount_balance;
+  cin.ignore();
+  <span class="ret">return</span> client;
+}`},
+addDataLineToFile:{t:'addDataLineToFile(filename, linedata)',s:'Appends one line to the end of the file',tags:'<span class="badge b-void">void</span>',
+vars:[{n:'myfile',tp:'fstream',note:'Opens with ios::app to append, not overwrite',warn:''}],
+goes:'Writes directly to <span>DataBaseBank</span>',
+code:`<span class="kw">void</span> addDataLineToFile(
+    string filename, string linedata) {
+  fstream myfile;
+  myfile.open(filename,
+    ios::out | ios::app); <span class="cm">// app = append to end</span>
+  <span class="kw">if</span> (myfile.is_open()) {
+    myfile << linedata << endl;
+    myfile.close();
+  }
+}`},
+file:{t:'DataBaseBank (the file)',s:'Permanent storage — each line = one client',tags:'<span class="badge b-void">permanent storage</span>',
+vars:[{n:'each line',tp:'string',note:'"A200#//#1234#//#Ahmed#//#050#//#5000.0"',warn:"If the delimiter changes, vsplitstring() won't be able to parse it!"}],
+goes:'Read by <span>vloaddatainfile()</span> — Written by <span>addDataLineToFile()</span> & <span>DeletDataAndSaveAgain()</span>',
+code:`<span class="cm">// File contents example:</span>
+A200<span class="str">#//#</span>1234<span class="str">#//#</span>Ahmed<span class="str">#//#</span>050<span class="str">#//#</span>5000.0
+V500<span class="str">#//#</span>8888<span class="str">#//#</span>Sara<span class="str">#//#</span>055<span class="str">#//#</span>3000.0
+C500<span class="str">#//#</span>4444<span class="str">#//#</span>Malak<span class="str">#//#</span>011<span class="str">#//#</span>400.0`},
+vload:{t:'vloaddatainfile(filename)',s:'Reads entire file and returns a vector of structs',tags:'<span class="badge b-in">input: string</span><span class="badge b-out">return: vector&lt;sclient&gt;</span>',
+vars:[{n:'vclient',tp:'vector<sclient>',note:'Filled gradually — each line → sclient → push_back',warn:''},{n:'line',tp:'string',note:'Temporary — read, converted, discarded each iteration',warn:''}],
+goes:'Vector goes to <span>printDesinData()</span> or <span>search()</span> or <span>delet()</span> or <span>updata_data()</span> or <span>depost()</span> or <span>withdraw()</span>',
+code:`vector&lt;sclient&gt; vloaddatainfile(string filename) {
+  vector&lt;sclient&gt; vclient;
+  fstream myfile;
+  myfile.open(filename, ios::in);
+  <span class="kw">if</span> (myfile.is_open()) {
+    string line;
+    <span class="kw">while</span> (getline(myfile, line)) {
+      vclient.push_back(
+        convertLineToStrust(line)
+      );
+    }
+    myfile.close();
+  }
+  <span class="ret">return</span> vclient;
+}`},
+vsplit:{t:'vsplitstring(line, delim)',s:'Splits a line at every #//# and returns vector<string>',tags:'<span class="badge b-in">input: string</span><span class="badge b-out">return: vector&lt;string&gt;</span>',
+vars:[{n:'vstring',tp:'vector<string>',note:'["A200","1234","Ahmed","050","5000.0"]',warn:'If the order in convertDataToLine is wrong, everything breaks!'},{n:'pos',tp:'size_t',note:'Position of #//# in the line — moves each iteration',warn:''}],
+goes:'Vector goes to <span>convertLineToStrust()</span>',
+code:`vector&lt;string&gt; vsplitstring(
+    string line, string delim) {
+  vector&lt;string&gt; vstring;
+  string world = <span class="str">""</span>;
+  size_t pos = 0;
+  <span class="kw">while</span>((pos=line.find(delim))!=string::npos) {
+    world = line.substr(0, pos);
+    <span class="kw">if</span> (world != <span class="str">""</span>)
+      vstring.push_back(world);
+    line.erase(0, pos+delim.length());
+    <span class="cm">// ↑ key line — removes the part already read</span>
+  }
+  <span class="kw">if</span> (line != <span class="str">""</span>) vstring.push_back(line);
+  <span class="ret">return</span> vstring;
+}`},
+convertLine:{t:'convertLineToStrust(line)',s:'Converts a text line into a sclient struct',tags:'<span class="badge b-in">input: string</span><span class="badge b-out">return: sclient</span>',
+vars:[{n:'client',tp:'sclient',note:'Filled from vector<string> field by field',warn:''},{n:'vstring',tp:'vector<string>',note:'v[0]=account, v[1]=pin, v[2]=name, v[3]=phone, v[4]=balance',warn:'Order must match convertDataToLine!'}],
+goes:'The sclient gets pushed into <span>vector&lt;sclient&gt;</span> inside vloaddatainfile',
+code:`sclient convertLineToStrust(
+    string line, string delim) {
+  sclient client;
+  vector&lt;string&gt; vstring =
+    vsplitstring(line, delim);
+  client.acount_number  = vstring[0];
+  client.pincode        = vstring[1];
+  client.name           = vstring[2];
+  client.phone          = vstring[3];
+  client.acount_balance = stod(vstring[4]);
+  <span class="ret">return</span> client;
+}`},
+printDesign:{t:'printDesinData(vclient)',s:'Prints all clients in a formatted table',tags:'<span class="badge b-in">input: vector&lt;sclient&gt;</span><span class="badge b-void">void</span>',
+vars:[{n:'c',tp:'sclient',note:'In the for loop — calls PrintDataClient() for each client',warn:''}],
+goes:'Calls <span>PrintDataClient()</span> for every element in the vector',
+code:`<span class="kw">void</span> printDesinData(
+    vector&lt;sclient&gt; vclient) {
+  cout << string(90, <span class="str">'_'</span>) << endl;
+  <span class="kw">for</span> (sclient c : vclient) {
+    PrintDataClient(c);
+    cout << endl;
+  }
+  cout << string(90, <span class="str">'_'</span>) << endl;
+}`},
+ShowClient:{t:'ShowClient()',s:'Loads data from file and displays all clients',tags:'<span class="badge b-void">void</span>',
+vars:[{n:'vclient',tp:'vector<sclient>',note:'Local copy of file data in memory',warn:''}],
+goes:'Calls <span>vloaddatainfile()</span> then <span>printDesinData()</span>',
+code:`<span class="kw">void</span> ShowClient() {
+  vector&lt;sclient&gt; vclient =
+    vloaddatainfile(filename);
+  printDesinData(vclient);
+}`},
+check:{t:'check_acountnumberistrue()',s:'Shared function — finds a client and returns true/false',tags:'<span class="badge b-shared">Shared: Add, Search, Delete, Update</span><span class="badge b-out">return: bool</span>',
+vars:[{n:'client&',tp:'sclient&',note:'The & is critical — modifies the original in the calling function',warn:"Without & the function finds the client but can't pass it back!"},{n:'vclient&',tp:'vector<sclient>&',note:"& here is for efficiency — we're not modifying it",warn:''}],
+goes:'true → <span>client&</span> is filled and passed back to caller | false → "Not Found"',
+code:`<span class="kw">bool</span> check_acountnumberistrue(
+    string acountnumber,
+    vector&lt;sclient&gt;& vclient,
+    sclient& client) {
+  <span class="kw">for</span> (sclient& c : vclient) {
+    <span class="kw">if</span> (c.acount_number == acountnumber) {
+      client = c;
+      <span class="ret">return true</span>;
+    }
+  }
+  <span class="ret">return false</span>;
+}`},
+PrintClientCard:{t:'PrintClientCard(client)',s:"Prints a single client's data in a clean format",tags:'<span class="badge b-in">input: sclient</span><span class="badge b-void">void</span>',
+vars:[{n:'client',tp:'sclient',note:"A copy — printing doesn't need to modify the original",warn:''}],
+goes:'Prints directly to screen',
+code:`<span class="kw">void</span> PrintClientCard(sclient client) {
+  cout << <span class="str">"\nAccount Number : "</span>
+       << client.acount_number;
+  cout << <span class="str">"\nPin Code       : "</span>
+       << client.pincode;
+  cout << <span class="str">"\nName           : "</span>
+       << client.name;
+  cout << <span class="str">"\nPhone          : "</span>
+       << client.phone;
+  cout << <span class="str">"\nAccount Balance: "</span>
+       << client.acount_balance;
+}`},
+search:{t:'search()',s:'Finds a client by account number and shows their data',tags:'<span class="badge b-void">void</span>',
+vars:[{n:'vclient',tp:'vector<sclient>',note:'Loaded from file at the start of this function',warn:''},{n:'client',tp:'sclient',note:'Empty at start — filled only if search succeeds (because of &)',warn:''}],
+goes:'Calls <span>check_acountnumberistrue()</span> then <span>PrintClientCard()</span>',
+code:`<span class="kw">void</span> search() {
+  vector&lt;sclient&gt; vclient =
+    vloaddatainfile(filename);
+  string acountnumber;
+  cout << <span class="str">"Account number? "</span>;
+  cin >> acountnumber;
+  sclient client;
+  <span class="kw">if</span>(check_acountnumberistrue(
+      acountnumber, vclient, client))
+    PrintClientCard(client);
+  <span class="kw">else</span>
+    cout << <span class="str">"\nClient Not Found!"</span>;
+}`},
+delet:{t:'delet()',s:'Deletes a client after confirmation — uses Soft Delete',tags:'<span class="badge b-void">void</span>',
+vars:[{n:'vclient',tp:'vector<sclient>',note:'Loaded from file — changes happen in memory first',warn:''},{n:'markof_delet',tp:'bool',note:'Set to true only — SaveAgain() is the one that ignores it',warn:''}],
+goes:'Calls <span>check()</span> → <span>markdeletclient()</span> → <span>DeletDataAndSaveAgain()</span>',
+code:`<span class="kw">void</span> delet() {
+  vector&lt;sclient&gt; vclient =
+    vloaddatainfile(filename);
+  string acountnumber;
+  cout << <span class="str">"Account number to delete? "</span>;
+  cin >> acountnumber;
+  sclient client;
+  <span class="kw">if</span>(check_acountnumberistrue(
+      acountnumber, vclient, client)) {
+    PrintClientCard(client);
+    <span class="kw">char</span> Answer;
+    cout << <span class="str">"\nAre you sure? Y/N? "</span>;
+    cin >> Answer;
+    <span class="kw">if</span>(toupper(Answer)==<span class="str">'Y'</span>) {
+      markdeletclient(acountnumber, vclient);
+      DeletDataAndSaveAgain(filename, vclient);
+      cout << <span class="str">"\nClient Deleted Successfully."</span>;
+    }
+  } <span class="kw">else</span>
+    cout << <span class="str">"\nClient Not Found!"</span>;
+}`},
+markdelet:{t:'markdeletclient(num, vclient&)',s:"Marks the client only — doesn't actually delete",tags:'<span class="badge b-in">input: string + vector&</span><span class="badge b-out">return: bool</span>',
+vars:[{n:'vclient&',tp:'vector<sclient>&',note:'The & is critical — change must affect the original in delet()',warn:'Without & the mark is set on a copy and gets discarded!'},{n:'c.markof_delet',tp:'bool',note:'false → true only — DeletDataAndSaveAgain() is the one that acts on it',warn:''}],
+goes:'Then <span>DeletDataAndSaveAgain()</span> checks markof_delet and skips that client',
+code:`<span class="kw">bool</span> markdeletclient(
+    string acountnumber,
+    vector&lt;sclient&gt;& vclient) {
+  <span class="kw">for</span> (sclient& c : vclient) {
+    <span class="kw">if</span> (c.acount_number == acountnumber) {
+      c.markof_delet = <span class="ret">true</span>;
+      <span class="ret">return true</span>;
+    }
+  }
+  <span class="ret">return false</span>;
+}`},
+save:{t:'DeletDataAndSaveAgain(filename, vclient)',s:'Clears the file and rewrites it — skipping marked clients',tags:'<span class="badge b-shared">Shared: Delete, Update, Deposit, Withdraw</span><span class="badge b-void">void</span>',
+vars:[{n:'myfile',tp:'fstream',note:'ios::out only — clears the file and starts fresh',warn:'If you use ios::app instead of ios::out it will APPEND not overwrite!'},{n:'C.markof_delet',tp:'bool',note:'false → write it | true → skip it',warn:''}],
+goes:'Writes to <span>DataBaseBank</span> — called from <span>delet()</span>, <span>updata_data()</span>, <span>depost()</span>, <span>withdraw()</span>',
+code:`<span class="kw">void</span> DeletDataAndSaveAgain(
+    string filename,
+    vector&lt;sclient&gt; vclient) {
+  fstream myfile;
+  myfile.open(filename, ios::out);
+  <span class="kw">if</span> (myfile.is_open()) {
+    <span class="kw">for</span> (sclient C : vclient) {
+      <span class="kw">if</span> (C.markof_delet == <span class="ret">false</span>)
+        myfile << convertDataToLine(C)
+               << endl;
+    }
+    myfile.close();
+  }
+}`},
+updata:{t:'updata_data()',s:'Finds a client and replaces their data',tags:'<span class="badge b-void">void</span>',
+vars:[{n:'vclient',tp:'vector<sclient>',note:'Loaded from file, modified in memory, then saved',warn:''},{n:'c',tp:'sclient&',note:'The & in the for loop is critical — change must affect the vector',warn:'Without & the update happens on a copy and the vector stays unchanged!'}],
+goes:'Calls <span>check()</span> → <span>ChangeClientRecord()</span> → <span>DeletDataAndSaveAgain()</span>',
+code:`<span class="kw">void</span> updata_data() {
+  vector&lt;sclient&gt; vclient =
+    vloaddatainfile(filename);
+  string acountnumber;
+  cout << <span class="str">"Account number to update? "</span>;
+  cin >> acountnumber;
+  bool found = <span class="ret">false</span>, updated = <span class="ret">false</span>;
+  <span class="kw">for</span> (sclient& c : vclient) {
+    <span class="kw">if</span> (c.acount_number == acountnumber) {
+      found = <span class="ret">true</span>;
+      PrintClientCard(c);
+      <span class="kw">char</span> Answer;
+      cout << <span class="str">"\nAre you sure? Y/N? "</span>;
+      cin >> Answer;
+      <span class="kw">if</span>(toupper(Answer)==<span class="str">'Y'</span>) {
+        cin.ignore();
+        c = ChangeClientRecord(acountnumber);
+        updated = <span class="ret">true</span>;
+      }
+      <span class="kw">break</span>;
+    }
+  }
+  <span class="kw">if</span> (updated)
+    DeletDataAndSaveAgain(filename, vclient);
+  <span class="kw">else if</span> (!found)
+    cout << <span class="str">"\nClient Not Found!"</span>;
+}`},
+ChangeRecord:{t:'ChangeClientRecord(num)',s:'Reads new data and returns a new struct with same account number',tags:'<span class="badge b-in">input: string</span><span class="badge b-out">return: new sclient</span>',
+vars:[{n:'client',tp:'sclient',note:'Account number is set first and stays fixed — only other fields change',warn:''}],
+goes:'The returned sclient replaces the old client in the vector inside <span>updata_data()</span>',
+code:`sclient ChangeClientRecord(string num) {
+  sclient client;
+  client.acount_number = num; <span class="cm">// fixed!</span>
+  cout << <span class="str">"Enter PinCode? "</span>;
+  getline(cin, client.pincode);
+  cout << <span class="str">"Enter Name? "</span>;
+  getline(cin, client.name);
+  cout << <span class="str">"Enter Phone? "</span>;
+  getline(cin, client.phone);
+  cout << <span class="str">"Enter Account Balance? "</span>;
+  cin >> client.acount_balance;
+  cin.ignore();
+  <span class="ret">return</span> client;
+}`},
+TransactionsMenu:{t:'TransactionsMenu()',s:'Sub-menu loop for all financial operations',tags:'<span class="badge b-void">void</span><span class="badge b-new">NEW</span>',
+vars:[{n:'choice',tp:'enTransactionsMenuChoice',note:'Enum: eDeposit=1, eWithdraw=2, eTotalBalances=3, eMainMenu=4',warn:''}],
+goes:'Calls <span>depost()</span> or <span>withdraw()</span> or <span>ShowTotalBalances()</span> based on choice',
+code:`<span class="kw">void</span> TransactionsMenu() {
+  enTransactionsMenuChoice choice;
+  <span class="kw">do</span> {
+    system(<span class="str">"cls"</span>);
+    choice = readTransactionsMenu();
+    <span class="kw">switch</span> (choice) {
+      <span class="kw">case</span> eDeposit:
+        depost();
+        system(<span class="str">"pause>0"</span>); <span class="kw">break</span>;
+      <span class="kw">case</span> eWithdraw:
+        withdraw();
+        system(<span class="str">"pause>0"</span>); <span class="kw">break</span>;
+      <span class="kw">case</span> eTotalBalances:
+        ShowTotalBalances();
+        system(<span class="str">"pause>0"</span>); <span class="kw">break</span>;
+      <span class="kw">case</span> eMainMenu: <span class="kw">break</span>;
+    }
+  } <span class="kw">while</span> (choice != eMainMenu);
+}`},
+depost:{t:'depost()',s:"Adds an amount to a client's balance and saves immediately",tags:'<span class="badge b-void">void</span><span class="badge b-new">NEW</span>',
+vars:[{n:'vclient',tp:'vector<sclient>',note:'Loaded from file — balance updated in memory then saved',warn:''},{n:'c',tp:'sclient&',note:'& is critical — update must affect the vector, not a copy',warn:'Without & the balance change is lost!'},{n:'amount',tp:'double',note:'Amount entered by user — added directly to acount_balance',warn:''}],
+goes:'Updates balance in vector → calls <span>DeletDataAndSaveAgain()</span> immediately',
+code:`<span class="kw">void</span> depost() {
+  vector&lt;sclient&gt; vclient =
+    vloaddatainfile(filename);
+  string acountnumber;
+  cout << <span class="str">"Account number to deposit? "</span>;
+  cin >> acountnumber;
+  bool found = <span class="ret">false</span>;
+  <span class="kw">for</span> (sclient& c : vclient) {
+    <span class="kw">if</span> (c.acount_number == acountnumber) {
+      found = <span class="ret">true</span>;
+      PrintClientCard(c);
+      <span class="kw">char</span> Answer;
+      cout << <span class="str">"\nAre you sure? Y/N? "</span>;
+      cin >> Answer;
+      <span class="kw">if</span>(toupper(Answer)==<span class="str">'Y'</span>) {
+        <span class="kw">double</span> amount;
+        cout << <span class="str">"Enter deposit amount? "</span>;
+        cin >> amount;
+        c.acount_balance += amount;
+        DeletDataAndSaveAgain(filename,vclient);
+        cout << <span class="str">"\nNew Balance: "</span>
+             << c.acount_balance;
+      }
+      <span class="kw">break</span>;
+    }
+  }
+  <span class="kw">if</span> (!found) cout << <span class="str">"\nClient Not Found!"</span>;
+}`},
+withdraw:{t:'withdraw()',s:'Deducts amount from balance — checks for insufficient funds',tags:'<span class="badge b-void">void</span><span class="badge b-new">NEW</span>',
+vars:[{n:'amount',tp:'double',note:'Checked against acount_balance before deducting',warn:'If amount > balance → "Insufficient balance" — no change is made'},{n:'c',tp:'sclient&',note:'& is critical — update must affect the vector',warn:''}],
+goes:'If amount OK → updates balance → calls <span>DeletDataAndSaveAgain()</span>',
+code:`<span class="kw">void</span> withdraw() {
+  vector&lt;sclient&gt; vclient =
+    vloaddatainfile(filename);
+  string acountnumber;
+  cout << <span class="str">"Account number to withdraw? "</span>;
+  cin >> acountnumber;
+  bool found = <span class="ret">false</span>;
+  <span class="kw">for</span> (sclient& c : vclient) {
+    <span class="kw">if</span> (c.acount_number == acountnumber) {
+      found = <span class="ret">true</span>;
+      PrintClientCard(c);
+      <span class="kw">char</span> Answer;
+      cout << <span class="str">"\nAre you sure? Y/N? "</span>;
+      cin >> Answer;
+      <span class="kw">if</span>(toupper(Answer)==<span class="str">'Y'</span>) {
+        <span class="kw">double</span> amount;
+        cout << <span class="str">"Enter withdraw amount? "</span>;
+        cin >> amount;
+        <span class="kw">if</span> (amount <= c.acount_balance) {
+          c.acount_balance -= amount;
+          DeletDataAndSaveAgain(filename,vclient);
+          cout << <span class="str">"\nNew Balance: "</span>
+               << c.acount_balance;
+        } <span class="kw">else</span>
+          cout << <span class="str">"\nInsufficient balance!"</span>;
+      }
+      <span class="kw">break</span>;
+    }
+  }
+  <span class="kw">if</span> (!found) cout << <span class="str">"\nClient Not Found!"</span>;
+}`},
+totalbal:{t:'ShowTotalBalances()',s:'Shows all clients with their balances and the total sum',tags:'<span class="badge b-void">void</span><span class="badge b-new">NEW</span>',
+vars:[{n:'vclient',tp:'vector<sclient>',note:'All clients loaded from file',warn:''}],
+goes:'Calls <span>printDesinbalance()</span> which calls <span>calcTotalBalances()</span>',
+code:`<span class="kw">void</span> ShowTotalBalances() {
+  vector&lt;sclient&gt; vclient =
+    vloaddatainfile(filename);
+  printDesinbalance(vclient);
+}
+
+<span class="kw">void</span> printDesinbalance(
+    vector&lt;sclient&gt; vclient) {
+  cout << string(70, <span class="str">'_'</span>) << endl;
+  <span class="kw">for</span> (sclient c : vclient) {
+    PrintTotalbalance(c);
+    cout << endl;
+  }
+  cout << string(70, <span class="str">'_'</span>) << endl;
+  cout << <span class="str">"\n\t\t Total Balances = "</span>
+       << calcTotalBalances(vclient);
+}`},
+calcTotal:{t:'calcTotalBalances(vclient)',s:'Loops through all clients and sums their balances',tags:'<span class="badge b-in">input: vector&lt;sclient&gt;</span><span class="badge b-out">return: double</span><span class="badge b-new">NEW</span>',
+vars:[{n:'total',tp:'double',note:'Starts at 0 — each iteration adds acount_balance',warn:''}],
+goes:'Returns total to <span>printDesinbalance()</span> to display at the bottom',
+code:`<span class="kw">double</span> calcTotalBalances(
+    vector&lt;sclient&gt; vclient) {
+  <span class="kw">double</span> total = 0;
+  <span class="kw">for</span> (sclient c : vclient)
+    total += c.acount_balance;
+  <span class="ret">return</span> total;
+}`}
+};
+
+var cur = null;
+function show(key, el) {
+  if(cur) cur.classList.remove('active');
+  el.classList.add('active'); cur = el;
+  var d = fns[key];
+  var vars = '';
+  if(d.vars && d.vars.length) {
+    vars = '<div class="vars-title">Variables inside this function:</div>';
+    d.vars.forEach(function(v) {
+      vars += '<div class="var-card"><div class="var-name">' + v.n + ' <span class="var-type">' + v.tp + '</span></div>';
+      if(v.note) vars += '<div class="var-note">' + v.note + '</div>';
+      if(v.warn) vars += '<div class="var-warn">⚠ ' + v.warn + '</div>';
+      vars += '</div>';
+    });
+  }
+  document.getElementById('panel').innerHTML =
+    '<div class="d-title">' + d.t + '</div>' +
+    '<div class="d-sub">' + d.s + '</div>' +
+    '<div class="badges">' + d.tags + '</div>' +
+    '<div class="goes">Returns / Goes to → ' + d.goes + '</div>' +
+    vars +
+    '<pre>' + d.code + '</pre>';
+}
+</script>
+</body>
+</html>
