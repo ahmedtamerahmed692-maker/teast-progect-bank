@@ -367,41 +367,38 @@ void depost()
 	cout << "enter account number you want to deposit? ";
 	cin >> acountnumber;
 
-	bool found = false;
-
-	for (sclient& c : vclient)
+	sclient client;
+	while (!check_acountnumberistrue(acountnumber, vclient, client))
 	{
-		if (c.acount_number == acountnumber)
-		{																			
-			found = true;
+		cout << "\nNot found! Enter another account number: ";
+		cin >> acountnumber;
+	}
 
-			PrintClientCard(c);
+	PrintClientCard(client);
 
-			char Answer;
-			cout << "\nAre you sure? Y/N? ";
-			cin >> Answer;
+	char Answer;
+	cout << "\nAre you sure? Y/N? ";
+	cin >> Answer;
 
-			if (toupper(Answer) == 'Y')
+	if (toupper(Answer) == 'Y')
+	{
+		double amount;
+		cout << "Enter deposit amount? ";
+		cin >> amount;
+
+		for (sclient& c : vclient)
+		{
+			if (c.acount_number == acountnumber)
 			{
-				double amount;
-				cout << "Enter deposit amount? ";
-				cin >> amount;
-
 				c.acount_balance += amount;
 				DeletDataAndSaveAgain(filename, vclient);
 				cout << "\nDeposit successful! New Balance: " << c.acount_balance << "\n";
+				break;
 			}
-
-			break;
 		}
 	}
-
-	if (!found)
-	{
-		cout << "\nClient not found!\n";
-	}
 }
-//دوال  withdraw(///////////////////
+
 void withdraw()
 {
 	vector<sclient> vclient = vloaddatainfile(filename);
@@ -410,44 +407,44 @@ void withdraw()
 	cout << "enter account number you want to withdraw? ";
 	cin >> acountnumber;
 
-	bool found = false;
-
-	for (sclient& c : vclient)
+	sclient client;
+	while (!check_acountnumberistrue(acountnumber, vclient, client))
 	{
-		if (c.acount_number == acountnumber)
-		{
-			found = true;
-
-			PrintClientCard(c);
-
-			char Answer;
-			cout << "\nAre you sure? Y/N? ";
-			cin >> Answer;
-
-			if (toupper(Answer) == 'Y')
-			{
-				double amount;
-				cout << "Enter withdraw amount? ";
-				cin >> amount;
-
-				if (amount <= c.acount_balance)
-				{
-					c.acount_balance -= amount;
-					DeletDataAndSaveAgain(filename, vclient); // ← انتقل هنا
-					cout << "\nWithdraw successful! New Balance: " << c.acount_balance << "\n"; // ← انتقل هنا
-				}
-				else
-				{
-					cout << "\nInsufficient balance!\n";
-				}
-			}
-
-			break;
-		}
+		cout << "\nNot found! Enter another account number: ";
+		cin >> acountnumber;
 	}
 
-	if (!found)
-		cout << "\nClient not found!\n";
+	PrintClientCard(client);
+
+	char Answer;
+	cout << "\nAre you sure? Y/N? ";
+	cin >> Answer;
+
+	if (toupper(Answer) == 'Y')
+	{
+		double amount;
+		cout << "Enter withdraw amount? ";
+		cin >> amount;
+
+		while (amount > client.acount_balance)
+		{
+			cout << "\nAmount exceeds balance! Max you can withdraw: "
+				 << client.acount_balance << "\n";
+			cout << "Enter another amount? ";
+			cin >> amount;
+		}
+
+		for (sclient& c : vclient)
+		{
+			if (c.acount_number == acountnumber)
+			{
+				c.acount_balance -= amount;
+				DeletDataAndSaveAgain(filename, vclient);
+				cout << "\nWithdraw successful! New Balance: " << c.acount_balance << "\n";
+				break;
+			}
+		}
+	}
 }
 
 //داله عرض total balance ///////////////
